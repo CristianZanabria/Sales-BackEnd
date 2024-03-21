@@ -1,6 +1,8 @@
 package com.zdevs.service;
 
 import com.zdevs.model.Category;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
@@ -13,4 +15,10 @@ public interface ICategoryService extends ICRUD<Category, Integer> {
     List<Category> getNameAndDescription2( String name,  String description);
     List<Category> getNameSql(@Param("name") String name);
 
+    //pagination
+
+    Page<Category> findPage(Pageable pageable);
+
+
+    List<Category> findAllOrder(String param);
 }

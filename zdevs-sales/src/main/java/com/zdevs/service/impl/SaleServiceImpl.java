@@ -3,6 +3,7 @@ package com.zdevs.service.impl;
 import com.zdevs.dto.IProcedureDto;
 import com.zdevs.dto.ProcedureDTO;
 import com.zdevs.model.Sale;
+import com.zdevs.model.SaleDetail;
 import com.zdevs.repo.IGenericRepo;
 import com.zdevs.repo.ISaleRepo;
 import com.zdevs.service.ISaleService;
@@ -10,9 +11,11 @@ import com.zdevs.service.impl.CRUDImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static  java.util.stream.Collectors.*;
 
 @Service
 @RequiredArgsConstructor
@@ -59,5 +62,40 @@ public class SaleServiceImpl extends CRUDImpl<Sale, Integer> implements ISaleSer
                 .stream()
                 .max(Comparator.comparing(Sale::getTotal ))
                 .orElse(new Sale());
+    }
+
+    @Override
+    public String getBestSellerPerson() {
+        Map<String,Double> byUser = repo.findAll()
+                .stream()
+                .collect(groupingBy(s -> s.getUser().getUserName(),summingDouble(Sale::getTotal)));
+        //System.out.println(byUser);
+        return Collections.max(byUser.entrySet(),Comparator.comparingDouble(Map.Entry::getValue)).getKey();
+    }
+
+    @Override
+    public Map<String, Long> getSalesCountBySeller() {
+        return repo.findAll()
+                .stream()
+                .collect(groupingBy(s -> s.getUser().getUserName(),counting()));
+    }
+
+    @Override
+    public Map<String, Double> getMostSellerProduct() {
+        Stream<Sale> saleStream = repo.findAll().stream();
+        Stream<List<SaleDetail>> listStream = saleStream.map(Sale::getDetails);
+
+        Stream<SaleDetail> streamDetail = listStream.flatMap(Collection::stream); // list -> list.stream()
+        Map<String, Double> byProduct = streamDetail
+                .collect(groupingBy(d -> d.getProduct().getName(), summingDouble(SaleDetail::getQuantity)));
+        return byProduct.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .collect(toMap(
+                        Map.Entry::getKey,
+                        Map.Entry:: getValue,
+                        (oldValue, newValue) -> oldValue, LinkedHashMap::new //new LinkedHashMap<>()
+
+                ));
     }
 }

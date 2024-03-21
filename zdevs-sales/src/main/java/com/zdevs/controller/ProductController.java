@@ -1,5 +1,6 @@
 package com.zdevs.controller;
 
+import com.zdevs.dto.CategoryDTO;
 import com.zdevs.dto.ProductDTO;
 import com.zdevs.model.Product;
 import com.zdevs.service.IProductService;
@@ -7,6 +8,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -49,6 +52,12 @@ public class ProductController {
     public ResponseEntity <Void> delete(@PathVariable("id") Integer id) throws Exception{
          service.delete(id);
          return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/pagination")
+    public ResponseEntity<Page<ProductDTO>> findPage(Pageable pageable) throws Exception{
+        Page<ProductDTO> pageProduct = service.getPage(pageable).map(this::convertToDto);
+        return new ResponseEntity<>(pageProduct, HttpStatus.OK);
     }
 
     private ProductDTO convertToDto(Product obj){

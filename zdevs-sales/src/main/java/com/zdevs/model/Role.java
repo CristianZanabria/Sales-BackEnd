@@ -18,7 +18,7 @@ public class Role {
     @EqualsAndHashCode.Include
     private Integer idRole;
     @Column(length = 10, nullable = false)
-    private String nAME;
+    private String name;
     @Column(nullable = false)
     private  Boolean enabled;
 }

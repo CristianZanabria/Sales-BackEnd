@@ -8,6 +8,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -90,6 +93,28 @@ public class CategoryController {
         List<CategoryDTO> lst = service.getNameSql(name).stream().map(this::convertToDto).toList();
 
         return new ResponseEntity<>(lst,HttpStatus.OK);
+    }
+
+    @GetMapping("/pagination")
+    public ResponseEntity<Page<CategoryDTO>> findPage(Pageable pageable){
+        Page<CategoryDTO> pageCategory = service.findPage(pageable).map(this::convertToDto);
+        return new ResponseEntity<>(pageCategory, HttpStatus.OK);
+    }
+
+    @GetMapping("/pagination2")
+    public ResponseEntity<Page<CategoryDTO>> findPage(
+            @RequestParam(name = "p", defaultValue = "0") int page,
+            @RequestParam(name = "p", defaultValue = "0") int size
+    ){
+        PageRequest pageRequest= PageRequest.of(page,size);
+        Page<CategoryDTO> pageCategory = service.findPage(pageRequest).map(this::convertToDto);
+        return new ResponseEntity<>(pageCategory, HttpStatus.OK);
+    }
+
+    @GetMapping("/order")
+    public ResponseEntity<List<CategoryDTO>> findAllOrder(@RequestParam(name ="param",defaultValue = "ASC") String param){
+        List<CategoryDTO> lst = service.findAllOrder(param).stream().map(this::convertToDto).collect(Collectors.toList());
+        return new ResponseEntity<>(lst, HttpStatus.OK);
     }
 
 

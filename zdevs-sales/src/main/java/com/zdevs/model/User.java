@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table(name = "User-data")
+@Table(name = "User_data")
 public class User {
     @Id
     @EqualsAndHashCode.Include
@@ -21,7 +21,7 @@ public class User {
     @JoinColumn(name = "id_role", nullable = false, foreignKey = @ForeignKey(name = "FK_USER_ROLES"))//fk_Product
     private Role role;
 
-    @Column(length = 50, nullable = false,unique = true)
+    @Column(name = "username",length = 50, nullable = false,unique = true)
     private String userName;
 
     @Column(length = 60, nullable = false)

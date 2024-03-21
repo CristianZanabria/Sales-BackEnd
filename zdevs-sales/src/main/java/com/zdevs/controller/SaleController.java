@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -79,6 +80,23 @@ public class SaleController {
     public ResponseEntity<SaleDTO> getMostExpensive(){
         SaleDTO dto = convertToDto(service.getSaleMostExpensive());
         return  new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/bestSeller")
+    public ResponseEntity<String> getBestSeller(){
+        String user = service.getBestSellerPerson();
+        return  new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/Sellercount")
+    public ResponseEntity<Map<String, Long>> getSellerCount(){
+        Map<String, Long> byUser = service.getSalesCountBySeller();
+        return  new ResponseEntity<>(byUser, HttpStatus.OK);
+    }
+    @GetMapping(value = "/bestproduct")
+    public ResponseEntity<Map<String, Double>> getBestProduct(){
+        Map<String, Double> byUser = service.getMostSellerProduct();
+        return  new ResponseEntity<>(byUser, HttpStatus.OK);
     }
 
 

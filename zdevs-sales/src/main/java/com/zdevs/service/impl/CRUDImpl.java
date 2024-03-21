@@ -3,6 +3,8 @@ package com.zdevs.service.impl;
 import com.zdevs.exception.ModelNotFoundException;
 import com.zdevs.repo.IGenericRepo;
 import com.zdevs.service.ICRUD;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -34,5 +36,10 @@ public abstract class CRUDImpl<T,ID> implements ICRUD<T,ID> {
         getRepo().findById(id).orElseThrow( () -> new ModelNotFoundException("ID NOT FOUND: " + id));
         getRepo().deleteById(id);
 
+    }
+
+    @Override
+    public Page<T> getPage(Pageable pageable) throws Exception {
+        return getRepo().findAll(pageable);
     }
 }

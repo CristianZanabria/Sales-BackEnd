@@ -5,6 +5,9 @@ import com.zdevs.repo.ICategoryRepo;
 import com.zdevs.repo.IGenericRepo;
 import com.zdevs.service.ICategoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,6 +51,17 @@ public class CategoryServiceImpl extends CRUDImpl<Category, Integer> implements 
     @Override
     public List<Category> getNameSql(String name) {
         return repo.getNameSql(name);
+    }
+
+    @Override
+    public Page<Category> findPage(Pageable pageable) {
+        return repo.findAll(pageable);
+    }
+
+    @Override
+    public List<Category> findAllOrder(String param) {
+        Sort.Direction direction = param.equalsIgnoreCase("ASC")? Sort.Direction.ASC : Sort.Direction.DESC;
+        return repo.findAll(Sort.by(direction, "name"));
     }
 
 
