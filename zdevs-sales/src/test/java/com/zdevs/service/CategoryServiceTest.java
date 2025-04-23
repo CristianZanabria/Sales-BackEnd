@@ -19,7 +19,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-
+//Para poder ejecutar los test con Spring Security
+//@ActiveProfiles("test")
+//@AutoConfigureMockMvc(addFilters = false)
 @ExtendWith(SpringExtension.class)
 public class CategoryServiceTest {
 

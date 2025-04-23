@@ -68,7 +68,7 @@ public class SaleServiceImpl extends CRUDImpl<Sale, Integer> implements ISaleSer
     public String getBestSellerPerson() {
         Map<String,Double> byUser = repo.findAll()
                 .stream()
-                .collect(groupingBy(s -> s.getUser().getUserName(),summingDouble(Sale::getTotal)));
+                .collect(groupingBy(s -> s.getUser().getUsername(),summingDouble(Sale::getTotal)));
         //System.out.println(byUser);
         return Collections.max(byUser.entrySet(),Comparator.comparingDouble(Map.Entry::getValue)).getKey();
     }
@@ -77,7 +77,7 @@ public class SaleServiceImpl extends CRUDImpl<Sale, Integer> implements ISaleSer
     public Map<String, Long> getSalesCountBySeller() {
         return repo.findAll()
                 .stream()
-                .collect(groupingBy(s -> s.getUser().getUserName(),counting()));
+                .collect(groupingBy(s -> s.getUser().getUsername(),counting()));
     }
 
     @Override
