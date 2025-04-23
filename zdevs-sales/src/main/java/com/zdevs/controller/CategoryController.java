@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -30,6 +31,7 @@ public class CategoryController {
     @Qualifier("categoryMapper")
     private  final ModelMapper mapper;
 
+    @PreAuthorize("@authServiceImpl.hasAccess('/readAll')")
     @GetMapping
     public ResponseEntity<List<CategoryDTO>>  readAll() throws Exception{
         //ModelMapper mapper = new ModelMapper();
@@ -48,6 +50,7 @@ public class CategoryController {
     }
     @PutMapping("/{id}")
     public ResponseEntity<CategoryDTO> update(@Valid  @RequestBody CategoryDTO dto, @PathVariable("id") Integer id) throws Exception{
+        dto.setIdCategory(id);
         Category obj =  service.update(convertToEntity(dto), id);
         return new ResponseEntity<>(convertToDto(obj), HttpStatus.OK);
     }

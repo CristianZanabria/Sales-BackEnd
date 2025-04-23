@@ -6,6 +6,7 @@ import com.zdevs.service.ICRUD;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 public abstract class CRUDImpl<T,ID> implements ICRUD<T,ID> {
@@ -17,6 +18,13 @@ public abstract class CRUDImpl<T,ID> implements ICRUD<T,ID> {
 
     @Override
     public T update(T t, ID id) throws Exception {
+        //java reflexions
+       /* Class<?> clazz = t.getClass();
+        String className = t.getClass().getSimpleName();
+        String methodName = "setId" + className;  //genera el setIdPatient, setIdExam, etc
+        Method setIdMethod = clazz.getMethod(methodName, id.getClass());
+        setIdMethod.invoke(t, id);*/
+
         getRepo().findById(id).orElseThrow( () -> new ModelNotFoundException("ID NOT FOUND: " + id));
         return getRepo().save(t);
     }
