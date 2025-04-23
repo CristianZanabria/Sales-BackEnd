@@ -4,7 +4,7 @@ import com.zdevs.model.User;
 
 public interface IUserRepo extends IGenericRepo<User, Integer> {
 
-    User findOneByUsername(String username);
+    User findOneByUsername(String name);
 
 
 
